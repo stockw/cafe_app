@@ -1,9 +1,11 @@
-const express = require('express')
-const path = require('path')
+const express = require('express');
+const path = require('path');
 // logs the different requests to our server
-const logger = require('morgan')
+const logger = require('morgan');
 // cross origin access
-const cors = require('cors')
+const cors = require('cors');
+require('dotenv').config();
+require('./config/database.js')
 
 
 
@@ -29,11 +31,15 @@ app.get('test_route', (req, res) =>{
 })
 
 
-app.get("/user", (req, res) => (
-    res.send("user router!")
-))
+app.post('/api/users', (req, res) => {
+    console.log(req.body);
+    // doing authentication here
 
-// have has very last route
+    // sending user response after creation or login
+    res.json("good route")
+})
+
+// have as very last route, used as catch all route
 app.get('/*', function(req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
   });
