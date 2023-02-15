@@ -1,50 +1,87 @@
 const express = require('express');
 const path = require('path');
-// logs the different requests to our server
 const logger = require('morgan');
-// cross origin access
+// cross origin access 
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const User = require('./models/user.js');
+
+const passport = require('passport');
+const session = require('express-session');
+const initializePassport = require('./config/passport-config.js')
+
 require('dotenv').config();
-require('./config/database.js')
+require('./config/database.js');
 
-
-
-const app = express()
+const app = express();
 
 // access
 app.use(cors({
     origin: "*"
 }));
 
- //logs different requests to our server automatically
- app.use(logger('dev'))
+// logs the different requests to our server
+app.use(logger('dev'))
 
-// parse stringified objects (JSON)
+//parse stringified objects (JSON)
 app.use(express.json())
+
+
+initializePassport(
+    passport,
+    // passport tells us that they want a function that will return the correct user given an email
+    async email => {
+        let user = User.findOne({email: email})
+        return user;
+    },
+    async id => {
+        let user = User.findById(id);
+        return user;
+    },
+);
+
+app.use(session({
+    secure: true,
+    secret: 
+}))
+
+
 // server build folder
 app.use(express.static(path.join(__dirname, 'build')));
 
-
-
-app.get('test_route', (req, res) =>{
-    res.send("good route");
+app.get('/test_route', (req, res) => {
+    res.send("good route!")
 })
 
-
-app.post('/api/users', (req, res) => {
+app.post('/users/signup',async (req, res) => {
     console.log(req.body);
-    // doing authentication here
-
+    let hashedPassword = await bcrypt.hash(req.body.password, 10)
+    console.log(hashedPassword);
+    // use User model to place user in the database
+    let userFromCollection = await User.create({
+        email: req.body.email,
+        name: req.body.name,
+        password: hashedPassword
+    })
+    console.log(userFromCollection);
     // sending user response after creation or login
-    res.json("good route")
+    res.json("user created")
+});
+
+
+app.put('/users/login', async (req, res) => {
+    console.log(req.body);
+    // passport authentication
 })
 
-// have as very last route, used as catch all route
-app.get('/*', function(req, res) {
+// catch all route
+app.get('/*', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
-  });
+});
 
- 
+app.listen(5000, () => {
+    console.log(`Server is Listening on 5000`)
+});
 
 app.listen(5000, () => {
     console.log(`Server is Listening on 5000`)
