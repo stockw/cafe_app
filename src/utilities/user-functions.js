@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+// utilites folder is for universal, reusable functions
 export const signUp = async (formData) => {
 
         let serverResponse = await axios({
@@ -12,11 +12,11 @@ export const signUp = async (formData) => {
 }
 export const logIn = async (formData) => {
 
-    let serverResponse = await axios({
-        method: "PUT",
-        url: "/users/login",
-        data: formData
-    });
-
-return serverResponse;
+        let serverResponse = await axios({
+            method: "PUT",
+            url: "/users/login",
+            data: formData
+        });
+        console.log(serverResponse);
+    return serverResponse;
 }
