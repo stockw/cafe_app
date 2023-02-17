@@ -18,5 +18,18 @@ export const logIn = async (formData) => {
             data: formData
         });
         console.log(serverResponse);
+  
     return serverResponse;
+}
+
+export const getUserFromSession = async () => {
+    let response = await axios('/session-info')
+    console.log(response);
+    // WE HAVE THE LOGGED IN USER! :)
+    if (response.data.session.passport) {
+      let user = response.data.session.passport.user;
+      return user;
+    } else {
+        return false
+    }
 }
