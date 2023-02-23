@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axios from 'axios';
 // utilites folder is for universal, reusable functions
 export const signUp = async (formData) => {
 
@@ -30,6 +31,6 @@ export const getUserFromSession = async () => {
       let user = response.data.session.passport.user;
       return user;
     } else {
-        return false
+    return false
     }
 }

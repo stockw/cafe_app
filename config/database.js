@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 let connectionString = `mongodb+srv://${process.env.MONGOOSEUSERNAME}:${process.env.MONGOOSEPASSWORD}@mongosetupcluster.1dnn4wp.mongodb.net/CafeData?retryWrites=true&w=majority`;
 
-
 // by default mongoose 'strictQuery' is true (strict) meaning we cant ask for information not in our schema
 // see more here: https://mongoosejs.com/docs/migrating_to_6.html#strictquery-is-removed-and-replaced-by-strict
 mongoose.set('strictQuery', false);
